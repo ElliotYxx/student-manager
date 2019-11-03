@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Configuration>
+    <Properties>
+        <Property name="TEST_LOG">~/IdeaProjects/student-manager/test-log</Property>
+        <Property name="TEST_LOG_FILE_NAME">test</Property>
+
+        <Property name="LOG_HOME">~/IdeaProjects/student-manager/logs</Property>
+        <Property name="INFO_LOG_FILE_NAME">info</Property>
+    </Properties>
+
+    <Appenders>
+        <console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n" />
+        </console>
+
+        <File name="log" fileName="${TEST_LOG}/${TEST_LOG_FILE_NAME}.log" append="false">
+            <PatternLayout
+                pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n" />
+        </File>
+
+        <RollingRandomAccessFile name="InfoLog"
+                                 fileName="${LOG_HOME}/${date:yyyy-MM-dd}/${INFO_LOG_FILE_NAME}-${date:HH.mm.ss}.log"
+                                 filePattern="${LOG_HOME}/${date:yyyy-MM-dd}/${INFO_LOG_FILE_NAME}.log.%d{yyyy-MM-dd}.gz">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+
+            <PatternLayout pattern="%d %-5p (%F:%L) - %m%n" />
+
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+
+            <DefaultRolloverStrategy max="20" />
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <loggers>
+        <logger name="org.mybatis.spring" level="info"/>
+        <logger name="com.alibaba.druid" level="info"/>
+        <logger name="org.springframework" level="info"/>
+        <logger name="springfox" level="info"/>
+        <logger name="org.thymeleaf" level="info"/>
+        <logger name="com.baomidou.mybatisplus.core" level="info"/>
+        <logger name="com.baomidou.mybatis.extension.plugins.pagination" level="info" />
+
+        <root level="all">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="Log"/>
+            <appender-ref ref="InfoLog"/>
+        </root>
+    </loggers>
+</Configuration>
